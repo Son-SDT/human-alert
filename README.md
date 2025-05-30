@@ -1,6 +1,6 @@
-# human-alert
+# Human-alert process
 ## USING PYTHON 3.10
-human alert on modified region
+Human will be alerted on selected region
 
 How to use :
 
