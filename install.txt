@@ -1,6 +1,0 @@
-pip install torch torchvision torchaudio
-pip install opencv-python --verbose
-pip install pygame
-pip install yolov5 --verbose # unofficial PyTorch Hub-based installsudo a
-
-
