@@ -68,7 +68,7 @@ while True:
                 last_play_time = time.time()
 
         # Draw detection
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+      #  cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
     # Draw region
     if not polygon_defined:
