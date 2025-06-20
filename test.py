@@ -66,7 +66,7 @@ class YoloDetect:
     def stop_sound_alert(self):
         self.alert_active = False
     def alert(self, frame):
-        cv2.putText(frame, "INTRUSION ALERT", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(frame, "INTRUSION ALERT", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
         self.start_sound_alert("./alert.mp3")
         now = datetime.now(timezone.utc)
         if (self.last_alert is None) or ((now - self.last_alert).total_seconds() > self.alert_telegram_each):
