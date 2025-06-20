@@ -41,9 +41,6 @@ print(f'\nPress "Space" to erase polygon')
 print(f'\n"ESC" many times to exit')
 
 
-
-
-
 print(f"\n######################################################")
 
 while True:
