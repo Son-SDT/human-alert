@@ -48,7 +48,7 @@ class YoloDetect():
         cv2.putText(img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
         # Tinh toan centroid
-        centroid = ((x + x_plus_w) // 2, (y + y_plus_h) // 2)
+        centroid = ((x + x_plus_w) // 2, y_plus_h ) # y_plus_h = y2
         cv2.circle(img, centroid, 5, (color), -1)
 
         if isInside(points, centroid):
