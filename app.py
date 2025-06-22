@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from imutils.video import VideoStream
-from test import *
+from intrusion_detector import *
 
 # use webcam as input video stream
 video = VideoStream(src=0).start()
