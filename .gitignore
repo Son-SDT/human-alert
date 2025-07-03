@@ -1,7 +1,4 @@
-yolov5s.pt
-alert.png
-.env
-kiss-yo-homies.png
-
-# pycache
+.env/
+.venv/
+./asset/alert.png
 __pycache__/
