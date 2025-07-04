@@ -10,8 +10,6 @@ class YoloDetect:
     ALERT_COLOR = (0, 255, 255)
     DETECTION_COLOR = (0, 255, 0)
     THRESHOLD = 0.5
-    SOUND_DELAY = 0.5
-    MAIL_DELAY = 45
     IMAGE_RESIZE_SCALE = 0.8
 
     def __init__(
