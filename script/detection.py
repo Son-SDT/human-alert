@@ -1,6 +1,6 @@
-import torch, cv2, warnings
+import torch, warnings
 from shapely.geometry import Point, Polygon
-from notify import Notification
+from script.notify import Notification
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -16,13 +16,9 @@ class YoloDetect:
     def __init__(
         self,
         target: str = "person",
-        # width: int = 1280,
-        # height: int = 720,
     ) -> None:
         self.target = target
-        # self.screen = [width, height]
         self.notify = Notification()
-        self.detected = False
 
         try:
             self.model = torch.hub.load(
@@ -33,7 +29,7 @@ class YoloDetect:
         except Exception as e:
             raise e
 
-    def __alert(self, frame) -> None:
+    def __alert(self, cv2, frame) -> None:
         # draw notification on frame
         cv2.putText(
             frame,
@@ -54,7 +50,7 @@ class YoloDetect:
         # toggle alert system
         self.notify.toggleAlertSystem()
 
-    def __detected(self, frame, inputs: list[int], points: list[int]) -> bool:
+    def __detected(self, cv2, frame, inputs: list[int], points: list[int]) -> bool:
         x1, y1, x2, y2 = inputs
         centroid = ((x1 + x2) // 2, (y1 + y2) // 2)
 
@@ -72,8 +68,7 @@ class YoloDetect:
 
         return polygon.contains(centroid)
 
-    def startDetect(self, frame, points: list[int]) -> None:
-        # inference
+    def startDetect(self, cv2, frame, points: list[int]) -> None:
         detections = self.model(frame).xyxy[0]  # type: ignore[attr-defined]
         for *xyxy, _, cls in detections:
             classId = int(cls.item())
@@ -81,8 +76,8 @@ class YoloDetect:
             if label != self.target:
                 continue
 
-            if self.__detected(frame, xyxy, points):
-                self.__alert(frame)
+            if self.__detected(cv2, frame, xyxy, points):
+                self.__alert(cv2, frame)
 
     def stopDetect(self) -> None:
         self.notify.isActive = False

@@ -50,8 +50,9 @@ class IntrusionDetectionApp:
 
             self.model.notify.RECEIVERS = self.receivers
             detecting = False
-            cv2.namedWindow("Intrusion Warning")
-            cv2.setMouseCallback("Intrusion warning", self.click)
+            windowName = "Intrusion Warning"
+            cv2.namedWindow(windowName)
+            cv2.setMouseCallback(windowName, self.click)
             while True:
                 frame = self.video.read()
                 if frame is None:
@@ -61,7 +62,7 @@ class IntrusionDetectionApp:
                 frame = self.drawDetectingArea(frame, self.points)
 
                 if detecting and len(self.points) > 3:
-                    self.model.startDetect(frame, self.points)
+                    self.model.startDetect(cv2, frame, self.points)
 
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord("q"):
@@ -76,7 +77,7 @@ class IntrusionDetectionApp:
                     detecting = False
                     self.model.stopDetect()
 
-                cv2.imshow("Intrusion Warning", frame)
+                cv2.imshow(windowName, frame)
 
         except KeyboardInterrupt:
             print("Application interrupeted by user.")
