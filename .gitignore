@@ -1,4 +1,5 @@
 .env/
 .venv/
-./asset/alert.png
-./script/__pycache__/
+asset/alert.png
+script/__pycache__/
+yolov5su.pt

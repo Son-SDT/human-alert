@@ -71,7 +71,8 @@ class IntrusionDetectionApp:
                     if len(self.points) >= 3:
                         self.points.append(self.points[0])
                         detecting = True
-                    print("Need at least 3 points for a valide area.")
+                    else:
+                        print("Need at least 3 points for a valide area.")
                 elif key == ord("r"):  # reset polygon and other notifications
                     self.points = []
                     detecting = False

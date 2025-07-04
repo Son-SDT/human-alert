@@ -22,7 +22,7 @@ class YoloDetect:
         self.notify = Notification()
 
         try:
-            self.model = YOLO("yolov5s.pt")
+            self.model = YOLO("yolov5su.pt")
             self.model.conf = self.THRESHOLD
         except Exception as e:
             raise RuntimeError(f"Failed to load model: {e}")
