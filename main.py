@@ -21,7 +21,7 @@ class IntrusionDetectionApp:
         except Exception as e:
             raise e
 
-    def drawDetectingArea(self, frame, points) -> np.ndarray:
+    def drawDetectingArea(self, frame, points: list[list[int]]) -> np.ndarray:
         for p in points:
             frame = cv2.circle(frame, (p[0], p[1]), 5, (0, 0, 255), -1)
         if len(points) > 1:

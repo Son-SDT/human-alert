@@ -1,5 +1,6 @@
-import torch, warnings
+import warnings
 from shapely.geometry import Point, Polygon
+from ultralytics import YOLO
 from script.notify import Notification
 
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -21,13 +22,10 @@ class YoloDetect:
         self.notify = Notification()
 
         try:
-            self.model = torch.hub.load(
-                "ultralytics/yolov5", "yolov5s", pretrained=True
-            )
-            self.model.conf = self.THRESHOLD  # type: ignore[attr-defined]
-            self.model.classes = [0]  # type: ignore[attr-defined]
+            self.model = YOLO("yolov5s.pt")
+            self.model.conf = self.THRESHOLD
         except Exception as e:
-            raise e
+            raise RuntimeError(f"Failed to load model: {e}")
 
     def __alert(self, cv2, frame) -> None:
         # draw notification on frame
@@ -44,14 +42,20 @@ class YoloDetect:
         # redraw image for alert
         if self.notify.canSend():
             cv2.imwrite(
-                "../asset/alert.png", cv2.resize(frame, dsize=None, fx=0.8, fy=0.8)
+                "../asset/alert.png",
+                cv2.resize(
+                    frame,
+                    dsize=None,
+                    fx=self.IMAGE_RESIZE_SCALE,
+                    fy=self.IMAGE_RESIZE_SCALE,
+                ),
             )
 
         # toggle alert system
         self.notify.toggleAlertSystem()
 
-    def __detected(self, cv2, frame, inputs: list[int], points: list[int]) -> bool:
-        x1, y1, x2, y2 = inputs
+    def __detected(self, cv2, frame, xyxy, points: list[list[int]]) -> bool:
+        x1, y1, x2, y2 = map(int, xyxy)
         centroid = ((x1 + x2) // 2, (y1 + y2) // 2)
 
         cv2.rectangle(
@@ -64,19 +68,18 @@ class YoloDetect:
         cv2.circle(frame, centroid, 5, self.DETECTION_COLOR, -1)
 
         polygon = Polygon(points)
-        centroid = Point(centroid)
 
-        return polygon.contains(centroid)
+        return polygon.contains(Point(centroid))
 
-    def startDetect(self, cv2, frame, points: list[int]) -> None:
-        detections = self.model(frame).xyxy[0]  # type: ignore[attr-defined]
-        for *xyxy, _, cls in detections:
-            classId = int(cls.item())
-            label = self.model.names[classId]  # type: ignore[attr-defined]
+    def startDetect(self, cv2, frame, points: list[list[int]]) -> None:
+        detections = self.model(frame)[0]  # call predict() under with default value
+        for box in detections.boxes:
+            classId = int(box.cls.item())
+            label = self.model.names[classId]
             if label != self.target:
                 continue
 
-            if self.__detected(cv2, frame, xyxy, points):
+            if self.__detected(cv2, frame, box.xyxy[0].tolist(), points):
                 self.__alert(cv2, frame)
 
     def stopDetect(self) -> None:

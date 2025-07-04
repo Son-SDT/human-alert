@@ -1,4 +1,4 @@
 .env/
 .venv/
 ./asset/alert.png
-__pycache__/
+./script/__pycache__/
